@@ -1,0 +1,265 @@
+<html>
+<head><title>Scripture Match</title>
+<script src="jquery-1.8.2.min.js"></script>
+<style type="text/css">
+
+.align_left {
+	float:left;
+	margin-right:15px;
+}
+
+.align_right {
+	float:right;
+	margin-left:15px;
+}
+
+#game_stage{
+	width:440px;
+	height:440px;
+	background-color:#003366;
+	padding:7px;
+	float:left;
+}
+
+#points{
+	width:200px;
+}
+
+#options {
+	width:300px;
+	float:left;
+	margin-left:15px;
+}
+
+#player1, #player2 {
+	float:right;
+	margin-left: 5px;
+    margin-top: 21px;
+}
+.red {
+	color:red;
+}
+
+h3 {
+	float:left;
+}
+
+img {
+	width:100px;
+	height:100px;
+	float:left;
+	margin:5px;
+}
+
+</style>
+
+<script>
+
+var match, BOM, NT, OT, DC, tileset, output1, match1, match2, match_count, turn, player1, player2, holder1, holder2;
+
+
+
+function writeMe(){
+
+	turn = 1;
+	player1 = 0;
+	player2 = 0;
+	match_count = 1;
+
+	tileset = $('#tile_set').val();
+
+	BOM = ["title_of_liberty","brass_plates","sword_of_laban","liahona","nephi","moroni","alma_the_younger","abinadi"];
+	OT = ["adam_eve","noah","moses","abraham","isaiah","garden_eden","ark_covenant","tabernacle"];
+	NT = ["jesus","cross","gethsemane","last_supper","mary_joseph","paul","peter","tomb"];
+	DC = ["joseph_smith","brigham_young","book_mormon","priesthood","kirtland","nauvoo","hill_cumorah","spring_hill"];
+	
+// Build deck with two of everything based on tileset.
+	if (tileset === "BOM"){
+		deck = BOM;
+		deck = deck.concat(BOM);
+	} else if (tileset === "NT") {
+		deck = NT;
+		deck = deck.concat(NT);
+	} else if (tileset === "OT") {
+		deck = OT;
+		deck = deck.concat(OT);
+	} else if (tileset === "DC") {
+		deck = DC;
+		deck = deck.concat(DC);
+	}
+	
+	shuffle();
+
+// Prepare gameboard
+	output1 = "";
+	for(i=0; i<=15; i++) {
+		output1 += "<img src='images/back1.jpg' onclick='go(" +i+ ");' id='image"+i+"'/>";
+	}
+
+	$('#game_stage').html(output1);
+	$('#player1').html(player1);
+	$('#player2').html(player2);
+	myTurn(turn);	
+	$('#winner_display').css("display", "none");
+}
+
+
+function shuffle() {
+	for (i = 0; i < deck.length; i += 1){
+		var shuffle1 = deck.splice(i,1);
+		var random = Math.floor(Math.random()*deck.length);
+		deck.splice(random,0,shuffle1);
+
+	}
+	
+}
+
+
+function go(x) {
+//Action function- makes everything work
+	if (match_count === 1){
+//If first click do this
+		src1= "images/" + deck[x] + ".jpg";
+		$("#image" + x).attr("src",src1);
+		match1 = [$("#image" + x).attr("src"),$("#image" + x).attr("id")];
+		holder1 = x;
+		match_count = 2;
+	} else if (match_count === 2) {
+//if second click do this
+
+		src2 = "images/" + deck[x] + ".jpg";
+		$("#image" + x).attr("src", src2);
+		match2 = [$("#image" + x).attr("src"),$("#image" + x).attr("id")];
+		holder2 = x;
+//console.log(match1[0] + " " + match2[0]);
+//console.log(match1[1] + " " + match2[1]);
+
+			//check for a match
+			if (match1[0] === match2[0] && match1[1] !== match2[1] ) {
+				setTimeout("yesMatch(holder1,holder2)",2000);
+			} else if (match1[0] === match2[0] && match1[1] === match2[1]) {
+				match_count = 2;
+			} else {
+				setTimeout("noMatch(holder1,holder2)",2000);
+			}		
+//setTimeout("myTurn(turn)",2000);
+	} else {
+		
+//console.log ("match_count error");
+	}
+}
+
+function yesMatch(x,y) {
+	$("#image" + x).attr("src","images/blank.png");
+	$("#image" + y).attr("src", "images/blank.png");
+	$("#image" + x).attr("onclick", "none();");
+	$("#image" + y).attr("onclick", "none();");
+		if (turn === 1){
+			player1 = player1 + 1;
+			$("#player1").html(player1);
+		} else {
+			player2 = player2 + 1;
+			$("#player2").html(player2);
+		}
+	myTurn(turn);	
+	match_count = 1;
+	none();
+}
+
+function noMatch(x,y) {
+	$("#image" + x).attr("src", "images/back1.jpg");
+	$("#image" + y).attr("src", "images/back1.jpg");
+	myTurn(turn);	
+	
+}
+
+function myTurn(x) {
+	if (match_count === 2){
+			if (x === 1){
+				turn = 2;
+			} else {
+			turn = 1;
+			}
+		match_count = 1;
+	}
+
+
+	if (turn === 1){
+		$("#name1").attr("class", "red");
+		$("#name2").attr("class", "");
+	} else {
+		$("#name1").attr("class", "");
+		$("#name2").attr("class", "red");
+	}
+
+	
+}
+
+function none(){
+	if (player1 + player2 === 8){
+
+		$("#winner_display").html("<h3>Congratulations <span id='winner'></span>!</h3><br style='clear:both:' /><p>You are the winner!</p>");
+
+			if (player1 > player2){
+				$("#winner").html("Player 1");
+				
+			} else if (player1 === player2) {
+				$("#winner_display").html("<h3>Tie Game!</h3>");
+			} else {
+				$("#winner").html("Player 2");
+			}
+
+			$("#winner_display").css("display", "block");
+	}
+}
+
+</script>
+
+
+</head>
+<body>
+
+
+
+
+<div id="game_stage">
+
+
+</div>
+
+<div id="options">
+	<h1>Scripture Match</h1>
+	<div id="points">
+		
+			<h3 id="name1">Player 1: </h3>
+			<span id="player1"></span>
+			<br style="clear:both;" />
+		
+			<h3 id="name2">Player 2: </h3>
+			<span id="player2"></span>
+			<br style="clear:both;" />		
+
+	</div>
+
+	<form>
+		<select id="tile_set">
+			
+			<option value="OT">Old Testament</option>
+			<option value="NT">New Testament</option>
+			<option value="BOM" selected="selected">Book of Mormon</option>
+			<option value="DC">Doctrine and Covenants</option>
+		</select>
+		<input type="button" value="Start Game" onclick="writeMe();" />
+	</form>
+	<div id="winner_display" style="display:none;">
+		<h3>Congratulations <span id="winner"></span>!</h3>
+		<p>You are the winner!</p>
+	</div>
+</div>
+
+
+
+
+</body>
+</html>
+

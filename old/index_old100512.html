@@ -1,0 +1,217 @@
+<html>
+<head><title>Scripture Match</title>
+<script src="jquery-1.8.2.min.js"></script>
+<style type="text/css">
+
+.align_left {
+	float:left;
+	margin-right:15px;
+}
+
+.align_right {
+	float:right;
+	margin-left:15px;
+}
+
+#game_stage{
+	width:440px;
+	height:440px;
+	background-color:#003366;
+	padding:7px;
+	float:left;
+}
+
+#points{
+	width:200px;
+}
+
+#options {
+	width:300px;
+	float:left;
+	margin-left:15px;
+}
+
+#player1, #player2 {
+	float:right;
+	margin-left: 5px;
+    margin-top: 21px;
+}
+.red {
+	color:red;
+}
+
+h3 {
+	float:left;
+}
+
+img {
+	width:100px;
+	height:100px;
+	float:left;
+	margin:5px;
+}
+
+</style>
+
+<script>
+
+var match, BOM, NT, OT, DC, tileset, output1, match1, match2, match_count, turn, player1, player2, holder1, holder2;
+
+
+
+function writeMe(){
+	turn = 1;
+	player1 = 0;
+	player2 = 0;
+	match_count = 1;
+
+	tileset = document.getElementById('tile_set').value;
+
+	BOM = ["title_of_liberty","brass_plates","sword_of_laban","liahona","nephi","moroni","alma_the_younger","abinadi"];
+
+	OT =[];
+	NT =[];
+	DC =[];
+	
+// Build deck with two of everything based on tileset.
+	if (tileset === "BOM"){
+		match = BOM;
+		match = match.concat(BOM);
+	} else if (tileset === "NT") {
+		match = NT;
+		match = match.concat(NT);
+	} else if (tileset === "OT") {
+		match = OT;
+		match = match.concat(OT);
+	} else if (tileset === "DC") {
+		match = DC;
+		match = match.concat(DC);
+	}
+	
+
+	output1 = "";
+	for(i=0; i<=15; i++) {
+		output1 = output1 + "<img src='images/back1.jpg' onclick='go(" +i+ ");' id='image"+i+"'/>";
+	}
+
+	document.getElementById('game_stage').innerHTML = output1;
+	document.getElementById('player1').innerHTML = player1;
+	document.getElementById('player2').innerHTML = player2;
+	myTurn(turn);	
+}
+
+
+function go(x) {
+//Action function- makes everything work
+	if (match_count === 1){
+//If first click do this
+		document.getElementById("image" + x).src="images/" + match[x] + ".jpg";
+		match1 = [document.getElementById("image" + x).src="images/" + match[x] + ".jpg",document.getElementById("image" + x).id];
+		holder1 = x;
+		match_count = 2;
+	} else if (match_count === 2) {
+//if second click do this
+//console.log("count2:", turn);
+		document.getElementById("image" + x).src="images/" + match[x] + ".jpg";
+		match2 = document.getElementById("image" + x).src="images/" + match[x] + ".jpg";
+		holder2 = x;
+			//check for a match
+			if (match1 === match2 ) {
+				setTimeout("yesMatch(holder1,holder2)",3000);
+			} else {
+				setTimeout("noMatch(holder1,holder2)",3000);
+			}		
+//setTimeout("myTurn(turn)",3000);
+	} else {
+//console.log ("match_count error");
+	}
+}
+
+function yesMatch(x,y) {
+	document.getElementById("image" + x).src = "images/blank.png";
+	document.getElementById("image" + y).src = "images/blank.png";
+	document.getElementById("image" + x).onclick = "none();";
+	document.getElementById("image" + y).onclick = "none();";
+		if (turn === 1){
+			player1 = player1 + 1;
+			document.getElementById("player1").innerHTML = player1;
+		} else {
+			player2 = player2 + 1;
+			document.getElementById("player2").innerHTML = player2;
+		}
+	myTurn(turn);	
+	match_count = 1;
+}
+
+function noMatch(x,y) {
+	document.getElementById("image" + x).src="images/back1.jpg";
+	document.getElementById("image" + y).src="images/back1.jpg";
+	myTurn(turn);	
+	
+}
+
+function myTurn(x) {
+	if (match_count === 2){
+			if (x === 1){
+				turn = 2;
+			} else {
+			turn = 1;
+			}
+		match_count = 1;
+	}
+
+console.log("got this far2", turn);
+	if (turn === 1){
+		document.getElementById('name1').className = "red";
+		document.getElementById('name2').className = "";
+	} else {
+		document.getElementById('name1').className = "";
+		document.getElementById('name2').className = "red";
+	}
+console.log("got this far1", turn);
+	
+}
+
+function none(){}
+
+</script>
+
+
+</head>
+<body>
+
+
+
+
+<div id="game_stage">
+
+
+</div>
+
+<div id="options">
+	<h1>Scripture Match</h1>
+	<div id="points">
+	<div class="align_left">
+		<h3 id="name1">Player 1: </h3>
+		<span id="player1"></span>
+	</div>
+
+	<div class="align_right">
+		<h3 id="name2">Player2: </h3>
+		<span id="player2"></span>
+	</div>
+
+</div>
+
+<form>
+	<input id="tile_set" type="hidden" value="BOM" />
+	<input type="button" value="Start Game" onclick="writeMe();" />
+</form>
+</div>
+
+
+
+
+</body>
+</html>
+
