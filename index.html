@@ -61,35 +61,36 @@ img {
 
 </head>
 <body>
-<div  id="no_click"></>
-<div id="game_stage">
-</div>
-
-<div id="options">
-	<h1>Scripture Match</h1>
-	<div id="points">
-		
-			<h3 id="name1">Player 1: </h3>
-			<span id="player1"></span>
-			<br style="clear:both;" />
-		
-			<h3 id="name2">Player 2: </h3>
-			<span id="player2"></span>
-			<br style="clear:both;" />		
-
+<div style="width: 1000px; margin: 10px auto;">
+	<div id="game_stage">
 	</div>
 
-	<form>
-		<select id="tile_set">
+	<div id="options">
+		<h1>Scripture Match</h1>
+		<div id="points">
 			
-			<option value="OT" selected="selected">Old Testament</option>
-			<option value="NT">New Testament</option>
-			<option value="BOM">Book of Mormon</option>
-			<option value="DC">Doctrine and Covenants</option>
-		</select>
-		<input type="button" value="Start Game" onclick="s_match.writeMe();" />
-	</form>
-	<div id="winner_display" style="display:none;">
+				<h3 id="name1">Player 1: </h3>
+				<span id="player1"></span>
+				<br style="clear:both;" />
+			
+				<h3 id="name2">Player 2: </h3>
+				<span id="player2"></span>
+				<br style="clear:both;" />		
+
+		</div>
+
+		<form>
+			<select id="tile_set">
+				
+				<option value="OT" selected="selected">Old Testament</option>
+				<option value="NT">New Testament</option>
+				<option value="BOM">Book of Mormon</option>
+				<option value="DC">Doctrine and Covenants</option>
+			</select>
+			<input type="button" value="Start Game" onclick="s_match.writeMe();" />
+		</form>
+		<div id="winner_display" style="display:none;">
+		</div>
 	</div>
 </div>
 
