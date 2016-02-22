@@ -82,16 +82,14 @@ img {
 	<form>
 		<select id="tile_set">
 			
-			<option value="OT">Old Testament</option>
+			<option value="OT" selected="selected">Old Testament</option>
 			<option value="NT">New Testament</option>
-			<option value="BOM" selected="selected">Book of Mormon</option>
+			<option value="BOM">Book of Mormon</option>
 			<option value="DC">Doctrine and Covenants</option>
 		</select>
 		<input type="button" value="Start Game" onclick="s_match.writeMe();" />
 	</form>
 	<div id="winner_display" style="display:none;">
-		<h3>Congratulations <span id="winner"></span>!</h3>
-		<p>You are the winner!</p>
 	</div>
 </div>
 
@@ -237,7 +235,7 @@ s_match = {
 	},
 	none : function() {
 		if (this.player1 + this.player2 === 8){
-			$("#winner_display").html("<h3>Congratulations <span id='winner'></span>!</h3><br style='clear:both:' /><p>You are the winner!</p>");
+			$("#winner_display").html("<h3>Congratulations <span id='winner'></span>!</h3><p style='clear:both;'>You are the winner!</p>");
 			if (this.player1 > this.player2){
 				$("#winner").html("Player 1");
 			} else if (this.player1 === this.player2) {
